@@ -27,9 +27,9 @@ def title_citation(titulo, citas):
 
 def citation_check(doc1, doc1_title, doc2, doc2_title):
     doc1_quotes = title_citation(doc2_title, extract_quotes(doc1) + list(extract_cites(doc1)))
-    doc1_references = sorted([(cita, similitud) for cita, similitud in doc1_quotes.items() if (similitud != "Nula" and similitud >=  0.9  )], key=lambda x: x[1], reverse=True)
+    doc1_references = sorted([(cita, similitud) for cita, similitud in doc1_quotes.items() if similitud >=  0.9], key=lambda x: x[1], reverse=True)
 
     doc2_quotes = title_citation(doc1_title, extract_quotes(doc2) + list(extract_cites(doc2)))
-    doc2_references = sorted([(cita, similitud) for cita, similitud in doc2_quotes.items() if (similitud != "Nula" and similitud >=  0.9 )], key=lambda x: x[1], reverse=True)
+    doc2_references = sorted([(cita, similitud) for cita, similitud in doc2_quotes.items() if similitud >=  0.9], key=lambda x: x[1], reverse=True)
     
     return doc1_references, doc2_references

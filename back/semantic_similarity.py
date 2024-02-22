@@ -27,5 +27,5 @@ def calcular_similitud_semantica(doc1_content, doc2_content):
     model = train_word2vec(docs)
 
     similarity = semantic_similarity(model, doc1_content, doc2_content)
-    if (similarity <= 0) : similarity = "Nula"
+
     return similarity

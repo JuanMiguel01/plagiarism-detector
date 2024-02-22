@@ -5,14 +5,15 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .image {
-            width:   100%; /* Adjust as needed */
-            max-width:   300px; /* Adjust as needed */
-        }
+            .image {
+        width:  100%; /* Adjust as needed */
+        max-width:  300px; /* Adjust as needed */
+    }
         #similarityChart {
-            max-width:   300px;
-            max-height:   300px;
-        }
+    max-width: 300px;
+    max-height: 300px;
+}
+
         .file-input {
             margin-bottom:   1rem;
         }
@@ -20,8 +21,9 @@
             width:   100%;
             overflow-x: auto;
         }
+        /* Estilos adicionales para personalizar la apariencia */
         .card {
-            margin-bottom:   1.5rem;
+            margin-bottom:  1.5rem;
         }
         .card-header {
             background-color: #f8f9fa;
@@ -31,95 +33,81 @@
 </head>
 <body>
     <div class="container">
-        <!-- Sección de subida de archivos -->
-        <div class="card mb-3">
-            <div class="card-header">
-                <h2>Subir archivos</h2>
-            </div>
-            <div class="card-body">
-                <form action="/" method="post" enctype="multipart/form-data">
-                    <div class="row">
-                        <div class="col-md-6">
-                            Archivo   1: <input type="file" class="file-input" name="doc1"><br>
-                        </div>
-                        <div class="col-md-6">
-                            Archivo   2: <input type="file" class="file-input" name="doc2"><br>
-                        </div>
-                    </div>
-                    <input type="submit" value="Subir archivos" class="btn btn-primary">
-                </form>
-            </div>
-        </div>
-
-        <!-- Línea divisoria -->
-        <hr>
-
-        <!-- Sección de resultados -->
-        <div class="card">
-            <div class="card-header">
-                <h2>Resultados</h2>
-            </div>
-            <div class="card-body">
-                {% if doc1_references or doc2_references %}
-                    {% if doc1_references %}
-                    <h3>Posibles citas en el documento "{{ doc1_name }}" :</h3>
-                    <ul class="list-group">
-                        {% for reference in doc1_references %}
-                        <li class="list-group-item">{{ reference }}</li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
-
-                    {% if doc2_references %}
-                    <h3>Posibles citas en el documento "{{ doc2_name }}" :</h3>
-                    <ul class="list-group">
-                        {% for reference in doc2_references %}
-                        <li class="list-group-item">{{ reference }}</li>
-                        {% endfor %}
-                    </ul>
-                    {% endif %}
-                {% else %}
-                    <p>No se detectaron referencias entre los documentos.</p>
-                {% endif %}
-
-                {% if lexical_similarity != "Nula" %}
-                <h3>Similitud léxica entre los documentos: {{ lexical_similarity *100}}  %</h3>
-                <div class="row">
-                    <div class="col-md-6">
-                        <img src="{{ url_for('static', filename='images/' + doc1_name + '.png') }}" alt="Nube de palabras del documento   1" class="image">
-                        <p>{{doc1_name}}</p>
-                    </div>
-                    <div class="col-md-6">
-                        <img src="{{ url_for('static', filename='images/' + doc2_name + '.png') }}" alt="Nube de palabras del documento   2" class="image">
-                        <p>{{doc2_name}}</p>
-                    </div>
+        <h2>Subir archivos</h2>
+        <form action="/" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-6">
+                    Archivo   1: <input type="file" class="file-input" name="doc1"><br>
                 </div>
-                {% else %}
-                <p>No existe similitud léxica entre los documentos.</p>
-                {% endif %}
+                <div class="col-md-6">
+                    Archivo   2: <input type="file" class="file-input" name="doc2"><br>
+                </div>
+            </div>
+            <input type="submit" value="Subir archivos" class="btn btn-primary">
+        </form>
 
-                {% if semantic_similarity != "Nula" %}
-                <h3>Similitud semántica entre los documentos:{{ semantic_similarity *100}}  % </h3>
-                <canvas id="similarityChart" width="30" height="30"></canvas>
-                {% else %}
-                <p>No existe similitud semántica entre los documentos.</p>
-                {% endif %}
-
-                {% if plagiarism_segments %}
-                <h2>Estos son los segmentos con mayores probabilidades de plagio:</h2>
+        <div class="result-area">
+            {% if doc1_references or doc2_references %}
+                {% if doc1_references %}
+                <h3>Posibles citas en el documento "{{ doc1_name }}" :</h3>
                 <ul class="list-group">
-                    {% for segment1, segment2, similarity in plagiarism_segments %}
-                    <li class="list-group-item">
-                        Segmento del documento   1: {{ segment1 }}<br>
-                        Segmento del documento   2: {{ segment2 }}<br>
-                        Similitud semántica: {{ similarity }}
-                    </li>
+                    {% for reference in doc1_references %}
+                    <li class="list-group-item">{{ reference }}</li>
                     {% endfor %}
                 </ul>
-                {% else %}
-                <p>No se detectó plagio.</p>
                 {% endif %}
+
+                {% if doc2_references %}
+                <h3>Posibles citas en el documento "{{ doc2_name }}" :</h3>
+                <ul class="list-group">
+                    {% for reference in doc2_references %}
+                    <li class="list-group-item">{{ reference }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            {% else %}
+                <p>No se detectaron referencias entre los documentos.</p>
+            {% endif %}
+
+            {% if lexical_similarity %}
+            <h3>Similitud léxica entre los documentos: {{ lexical_similarity *100}}  %</h3>
+            
+            <!-- Add the images here -->
+            <div class="row">
+                <div class="col-md-6">
+                    <img src="{{ url_for('static', filename='images/' + doc1_name + '.png') }}" alt="Nube de palabras del documento   1" class="image">
+                    <p>{doc1_name}</p>
+                </div>
+                <div class="col-md-6">
+                    <img src="{{ url_for('static', filename='images/' + doc2_name + '.png') }}" alt="Nube de palabras del documento   2" class="image">
+                    <p>{doc2_name}</p>
+                </div>
             </div>
+            {% endif %}
+            
+            
+            
+
+            {% if semantic_similarity %}
+            <h3>Similitud semántica entre los documentos:{{ semantic_similarity *100}}  % </h3>
+            <canvas id="similarityChart" width="30" height="30"></canvas>
+          
+            {% endif %}
+
+            {% if plagiarism_segments %}
+            <h2>Estos son los segmentos con mayores probabilidades de plagio:</h2>
+            <ul class="list-group">
+                {% for segment1, segment2, similarity in plagiarism_segments %}
+                <li class="list-group-item">
+                    Segmento del documento   1: {{ segment1 }}<br>
+                    Segmento del documento   2: {{ segment2 }}<br>
+                    Similitud semántica: {{ similarity }}
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No se detectó plagio.</p>
+            {% endif %}
         </div>
     </div>
 
@@ -131,22 +119,24 @@
     // Obtén el contexto del canvas donde se dibujará el gráfico
     var ctx = document.getElementById('similarityChart').getContext('2d');
 
+
+    
     // Crea un nuevo gráfico de dona
     var chart = new Chart(ctx, {
         type: 'doughnut', // Tipo de gráfico: dona
         data: {
             labels: ['Similitud', 'Diferencia'], // Etiquetas para la dona
             datasets: [{
-                data: [{{ semantic_similarity }} *   100,   100 - {{ semantic_similarity }} *   100], // Valores para la dona: similitud y diferencia
+                data: [{{ semantic_similarity }} *  100,  100 - {{ semantic_similarity }} *  100], // Valores para la dona: similitud y diferencia
                 backgroundColor: [
-                    'rgba(75,   192,   192,   0.2)', // Color para la similitud
-                    'rgba(255,   99,   132,   0.2)' // Color para la diferencia
+                    'rgba(75,  192,  192,  0.2)', // Color para la similitud
+                    'rgba(255,  99,  132,  0.2)' // Color para la diferencia
                 ],
                 borderColor: [
-                    'rgba(75,   192,   192,   1)', // Color del borde para la similitud
-                    'rgba(255,   99,   132,   1)' // Color del borde para la diferencia
+                    'rgba(75,  192,  192,  1)', // Color del borde para la similitud
+                    'rgba(255,  99,  132,  1)' // Color del borde para la diferencia
                 ],
-                borderWidth:   1
+                borderWidth:  1
             }]
         },
         options: {
@@ -158,7 +148,9 @@
                 animateScale: true,
                 animateRotate: true
             }
+
         }
     });
-</script>
+    </script>
+    
 </html>

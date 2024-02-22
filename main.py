@@ -1,7 +1,5 @@
 from flask import Flask
 from gui.app import app as gui_app
-
-
 from back.segmentation import PlagiarismDetector
 from back.preproccesing import TextPreprocessor
 from back.lexical_similarity import calcular_similitud_coseno
@@ -9,7 +7,6 @@ from back.semantic_similarity import calcular_similitud_semantica
 from back.quote_extraction import citation_check
 from back.reading_tools import read_file
 from back.lexical_similarity import show
-
 
 # Inicializa los módulos necesarios
 preprocessor = TextPreprocessor()
